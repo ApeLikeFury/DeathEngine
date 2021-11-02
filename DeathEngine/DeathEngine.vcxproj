@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\defaultobject.cpp" />
     <ClCompile Include="source\init.cpp" />
     <ClCompile Include="source\inputs.cpp" />
     <ClCompile Include="source\main.cpp" />
@@ -158,6 +159,7 @@
     <ClCompile Include="source\stb_image\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\defaultobject.h" />
     <ClInclude Include="source\errors.h" />
     <ClInclude Include="source\inputs.h" />
     <ClInclude Include="source\model.h" />
@@ -172,12 +174,16 @@
     <ClInclude Include="source\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\Circle.frag" />
+    <None Include="shaders\Circle.vert" />
     <None Include="shaders\DotProduct.frag" />
     <None Include="shaders\3DProject.vert" />
     <None Include="shaders\Raytrace.frag" />
     <None Include="shaders\Reflections.frag" />
     <None Include="shaders\Simple2D.vert" />
     <None Include="shaders\SimpleColor.frag" />
+    <None Include="shaders\Square.frag" />
+    <None Include="shaders\Square.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

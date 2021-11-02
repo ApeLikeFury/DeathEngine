@@ -11,6 +11,7 @@
 #include "overlay.h"
 #include "vec3.h"
 #include "storagebuffer.h"
+#include "defaultobject.h"
 
 extern vec3<float> CameraRotation;
 extern vec3<float> CameraPosition;
@@ -40,6 +41,8 @@ int main(void)
     
     storagebuffer vertices(landscape.vertex_positions, 0);
 
+    createobject circle("circle", { 0, 0 }, 1.0);
+
     
     speed = 100;
 
@@ -60,6 +63,7 @@ int main(void)
         raytrace.Uniform3f("iCameraPosition", CameraPosition.x, CameraPosition.y, CameraPosition.z);
 
         landscape.Draw();
+        circle.Draw();
     }
 
     win.terminate();

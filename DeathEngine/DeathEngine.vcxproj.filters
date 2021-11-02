@@ -48,6 +48,9 @@
     <ClCompile Include="source\storagebuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\defaultobject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\window.h">
@@ -86,6 +89,9 @@
     <ClInclude Include="source\storagebuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="source\defaultobject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\3DProject.vert" />
@@ -94,5 +100,9 @@
     <None Include="shaders\Raytrace.frag" />
     <None Include="shaders\Reflections.frag" />
     <None Include="shaders\SimpleColor.frag" />
+    <None Include="shaders\Circle.frag" />
+    <None Include="shaders\Circle.vert" />
+    <None Include="shaders\Square.vert" />
+    <None Include="shaders\Square.frag" />
   </ItemGroup>
 </Project>

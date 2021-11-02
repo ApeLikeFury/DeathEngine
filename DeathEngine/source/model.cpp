@@ -188,6 +188,7 @@ void model::BindShader(shader shader_choice)
 
 void model::Draw()
 {
+	glDepthFunc(GL_LESS);
 	object_shader.use();
 	model_texture.Bind(0);
 	SetUniforms();

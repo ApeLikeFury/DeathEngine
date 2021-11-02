@@ -8,5 +8,5 @@ uniform sampler2D iTexture;
 
 void main()
 {
-    fragColor = vec4(1.0 ,1.0 ,1.0 , 1.0);
+    fragColor = vec4(uv.x ,uv.y ,1.0 , 1.0);
 };
