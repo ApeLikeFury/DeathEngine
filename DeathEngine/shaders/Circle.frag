@@ -1,18 +1,18 @@
 #version 430 core
 
 layout(location = 0) out vec4 fragColor;
+uniform float radius;
+uniform vec2 centre;
+uniform vec3 color;
+in vec2 coords;
 
-in vec2 uv;
-in float rad;
-in vec2 cen;
 
 void main()
 {
-    vec3 br = vec3(0,0,0);
-    float dist = distance(cen, uv);
-    if(dist < rad)
+    float dist = distance(centre, coords);
+    if(dist > radius)
     {
-        br = vec3(1,1,1);
+        discard;
     }
-    fragColor = vec4(br, 1.0);
+    fragColor = vec4(color, 1.0);
 };

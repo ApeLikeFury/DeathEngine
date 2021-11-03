@@ -3,16 +3,12 @@
 layout(location = 0) in vec3 position;
 uniform float radius;
 uniform vec2 centre;
-out vec2 uv;
-out float rad;
-out vec2 cen;
+out vec2 coords;
 
 void main()
 {
-    rad = radius;
-    cen = centre;
-    uv = position.xy;
+    coords = position.xy*radius + centre;
    
-    gl_Position.xy = vec2(uv.x, uv.y);
+    gl_Position = vec4(coords, 0.0, 1.0);
 
 };
