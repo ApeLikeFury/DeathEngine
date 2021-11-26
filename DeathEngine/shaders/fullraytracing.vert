@@ -1,28 +1,13 @@
 #version 430 core
 
-layout(location = 0) in vec3 position;
-layout(location = 1) in vec3 normals;
-layout(location = 2) in vec2 texcoords;
-
-out vec3 VertexNormal;
-out vec3 LightPosition;
-out vec3 uv;
-out vec2 TextureCoordinate;
-out vec3 CameraPosition;
-
+layout(location = 0) in vec2 position;
 uniform vec3 iCameraPosition;
-uniform vec3 iCameraRotation;
-uniform vec3 iPlayerPosition;
-
-uniform vec3 iObjectRotation;
-uniform vec3 iObjectLocation;
-uniform vec3 iObjectCentre;
-
-uniform vec2 iScreenResolution;
 uniform vec3 iLightPosition;
 uniform float iTime;
-
-float fov = 1;
+out vec2 uv;
+out vec3 CameraPosition;
+out vec3 LightPosition;
+out float Time;
 
 vec3 rotate(vec3 coords, vec3 rot, vec3 center)
 {
@@ -56,16 +41,14 @@ vec3 rotate(vec3 coords, vec3 rot, vec3 center)
     return newcoords + center;
 };
 
-
 void main()
 {
-    vec3 vp = position - iCameraPosition;
-    VertexNormal = normals;
-    TextureCoordinate = texcoords;
-    CameraPosition = iCameraPosition;
-    LightPosition = iLightPosition;
-    uv = position;
+    Time = iTime;
+    LightPosition = rotate(iLightPosition, vec3(0,iTime,0), vec3(0,100,0));
 
-    gl_Position = vec4(vp.x, vp.y, -1, vp.z/fov);
+    uv = position;
+    CameraPosition = iCameraPosition;
+   
+    gl_Position.xy = uv;
 
 };

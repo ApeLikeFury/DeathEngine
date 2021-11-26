@@ -5,6 +5,7 @@
 #include "shader.h"
 #include "vec3.h"
 #include "texture.h"
+#include "vertexarray.h"
 
 class model
 {
@@ -16,16 +17,19 @@ public:
 	std::vector<float> vertex_positions;
 	std::vector<float> vertex_texcoords;
 	std::vector<float> vertex_normals;
+	std::vector<float> position_boundaries;
 
 	shader object_shader;
 	texture model_texture;
-	unsigned int vao;
+	vertexarray vao;
 
 	vec3<float> rotation = { 0.0, 0.0, 0.0 };
 	vec3<float> location = { 0.0, 0.0, 0.0 };
 	vec3<float> centre   = { 0.0, 0.0, 0.0 };
 
 	void ImportObj(std::string filepath);
+
+	void ComputeBoundaries();
 
 	void ImportTexture(std::string filepath);
 

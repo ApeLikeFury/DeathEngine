@@ -48,7 +48,10 @@
     <ClCompile Include="source\storagebuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\defaultobject.cpp">
+    <ClCompile Include="source\vertexarray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\framebuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -89,20 +92,19 @@
     <ClInclude Include="source\storagebuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\defaultobject.h">
+    <ClInclude Include="source\vertexarray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\framebuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\3DProject.vert" />
+    <None Include="shaders\fullraytracing.vert" />
+    <None Include="shaders\fullraytracing.frag" />
+    <None Include="shaders\framebuffer.vert" />
+    <None Include="shaders\framebuffer.frag" />
     <None Include="shaders\DotProduct.frag" />
-    <None Include="shaders\Simple2D.vert" />
-    <None Include="shaders\Raytrace.frag" />
-    <None Include="shaders\Reflections.frag" />
-    <None Include="shaders\SimpleColor.frag" />
-    <None Include="shaders\Circle.frag" />
-    <None Include="shaders\Circle.vert" />
-    <None Include="shaders\Square.vert" />
-    <None Include="shaders\Square.frag" />
   </ItemGroup>
 </Project>

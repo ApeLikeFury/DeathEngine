@@ -172,7 +172,69 @@ void model::ImportObj(std::string filepath)
 	}
 	else
 	{
-		std::cout << "failed to open file!";
+		std::cout << "failed to open file! " << filepath;
+	}
+}
+
+void model::ComputeBoundaries()
+{
+	for (size_t i = 0; i < size(vertex_positions); i += 9)
+	{
+		vec3<float> p1 = { vertex_positions[i + 0], vertex_positions[i + 1], vertex_positions[i + 2] };
+		vec3<float> p2 = { vertex_positions[i + 3], vertex_positions[i + 4], vertex_positions[i + 5] };
+		vec3<float> p3 = { vertex_positions[i + 6], vertex_positions[i + 7], vertex_positions[i + 8] };
+
+		float x[3] = { p1.x, p2.x, p3.x };
+		float y[3] = { p1.y, p2.y, p3.y };
+		float z[3] = { p1.z, p2.z, p3.z };
+
+		float x_max = p1.x;
+		float y_max = p1.y;
+		float z_max = p1.z;
+
+		float x_min = p1.x;
+		float y_min = p1.y;
+		float z_min = p1.z;
+
+		for (size_t i = 0; i < 3; i++)
+		{
+			if (x[i] > x_max)
+			{
+				x_max = x[i];
+			}
+			else if (x[i] < x_min)
+			{
+				x_min = x[i];
+			}
+
+			if (y[i] > y_max)
+			{
+				y_max = y[i];
+			}
+			else if (y[i] < y_min)
+			{
+				y_min = y[i];
+			}
+
+			if (z[i] > z_max)
+			{
+				z_max = z[i];
+			}
+			else if (z[i] < z_min)
+			{
+				z_min = z[i];
+			}
+		}
+
+		position_boundaries.push_back(x_max);
+		position_boundaries.push_back(y_max);
+		position_boundaries.push_back(z_max);
+		position_boundaries.push_back(x_min);
+		position_boundaries.push_back(y_min);
+		position_boundaries.push_back(z_min);
+		position_boundaries.push_back(x_min);
+		position_boundaries.push_back(y_min);
+		position_boundaries.push_back(z_min);
 	}
 }
 
@@ -192,21 +254,21 @@ void model::Draw()
 	object_shader.use();
 	model_texture.Bind(0);
 	SetUniforms();
-	glBindVertexArray(vao);
+	vao.bind();
 	glDrawArrays(GL_TRIANGLES, 0, size(vertex_positions));
+	vao.unbind();
 }
 
 void model::LoadModel()
 {
 	SetCentre();
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
+	vao.bind();
 
 	vertexbuffer positions(vertex_positions, 3, 0);
 	vertexbuffer normals(vertex_normals, 3, 1);
 	vertexbuffer texcoords(vertex_texcoords, 2, 2);
 
-	glBindVertexArray(0);
+	vao.unbind();
 }
 
 unsigned int model::length()

@@ -1,14 +1,10 @@
 #version 430 core
 
 layout(location = 0) out vec4 fragColor;
-
-in vec3 VertexNormal;
-in vec2 TextureCoordinate;
-in vec3 uv;
-in vec3 LightPosition;
 in vec3 CameraPosition;
-
-uniform sampler2D iTexture;
+in vec3 LightPosition;
+in vec2 uv;
+in float Time;
 
 layout(binding=0) buffer vertexpositions
 {
@@ -18,6 +14,11 @@ layout(binding=0) buffer vertexpositions
 layout(binding=1) buffer vertexnormals
 {
   float normals[];
+};
+
+layout(binding=2) buffer randomnumbers
+{
+  float rand[];
 };
 
 float random(vec2 co)
@@ -38,8 +39,15 @@ struct rayinfo
 float GetDiffuse(vec3 Normal, vec3 LightPos, vec3 Coord)
 {
     vec3 LightVector = normalize(LightPos - Coord);
-    float diffuse = dot(Normal, LightVector);
-    return max(diffuse, 0.1);
+    float Diffuse = max(dot(Normal, LightVector), 0.1);
+
+    float specularlight = 0.5;
+    vec3 viewdirection = normalize(CameraPosition - Coord);
+    vec3 reflectiondirection = reflect(-LightVector, Normal);
+    float specamount = pow(max(dot(viewdirection, reflectiondirection), 0.0), 8);
+    float specular = specamount * specularlight;
+
+    return Diffuse + specular;
 };
 
 
@@ -79,7 +87,9 @@ rayinfo Intersection(vec3 A, vec3 B, vec3 C, vec3 normal, vec3 RayPos, vec3 RayD
         ray.position = Q;
         ray.normal = n;
         ray.origindist = t;
-        ray.reflection = reflect(RayDir, normal);
+        float rand1 = random(vec2(Time/2+uv.x, Time+uv.y));
+        float rand2 = random(vec2(Time+uv.x, Time/2+uv.y));
+        ray.reflection = reflect(RayDir, normal) + vec3(rand2,rand1,rand2);
         return ray;
     }
     return ray;
@@ -106,6 +116,7 @@ rayinfo raytrace(vec3 StartPosition, vec3 RayDirection)
         {
             dist = ray.origindist;
             float br = GetDiffuse(ray.normal, LightPosition, ray.position);
+            br = max(br, 0.1);
             color = vec3(br,br,br);
             finalray = ray;
         }
@@ -118,6 +129,8 @@ rayinfo raytrace(vec3 StartPosition, vec3 RayDirection)
 
 rayinfo GetShadow(vec3 StartPosition, vec3 lightpos)
 {
+    float rand1 = random(vec2(Time/2+uv.x, Time+uv.y));
+    float rand2 = random(vec2(Time+uv.x, Time/2+uv.y));
     vec3 RayDirection = normalize(lightpos - StartPosition);
     float LightDist = distance(StartPosition, lightpos);
 
@@ -129,7 +142,7 @@ rayinfo GetShadow(vec3 StartPosition, vec3 lightpos)
         vec3 v2 = vec3(vertices[i+3], vertices[i+4], vertices[i+5]);
         vec3 v3 = vec3(vertices[i+6], vertices[i+7], vertices[i+8]);
         vec3 normal = vec3(normals[i], normals[i+1], normals[i+2]);
-        
+    
         ray = Intersection(v1, v2, v3, normal, StartPosition, RayDirection);
         
         if(ray.hit && ray.origindist < LightDist)
@@ -137,32 +150,34 @@ rayinfo GetShadow(vec3 StartPosition, vec3 lightpos)
             break;
         }
     }
+
     return ray;
 }
 
 void main()
 {
-    vec4 texColor = texture(iTexture, TextureCoordinate);
-    vec3 camvector = normalize(uv-CameraPosition);
-    vec3 lightvector = normalize(uv-LightPosition);
-    float d = GetDiffuse(VertexNormal, LightPosition, uv);
+    vec3 col = vec3(0,0,0);
 
-    vec3 color = vec3(d,d,d);
+    int bounces = 2;
 
     rayinfo ray;
-    for(int i = 0;i < 1; i++)
+    rayinfo shadow;
+    ray.position = CameraPosition;
+    ray.reflection = vec3(uv,1);
+    for(int i = 0; i < bounces; i++)
     {
-        vec3 offset = vec3(random(uv.xy+i),random(uv.xz+i),random(uv.yz+i))/40;
-        vec3 reflectiondirection = reflect(camvector, VertexNormal) + offset;
-        ray = raytrace(uv, reflectiondirection);
-        color += ray.color;
+        ray = raytrace(ray.position, ray.reflection);
+
+        shadow = GetShadow(ray.position, LightPosition);
+
+        col += ray.color/(i+1);
+        
+        if(shadow.hit)
+        {
+            col *= 0.3;
+        }
     }
 
-    if(GetShadow(uv, LightPosition).hit)
-    {
-        color *= 0.2;
-    }
-    
 
-    fragColor = vec4(texColor.xyz*color*1.5, 1.0);
+    fragColor = vec4(col, 1.0);
 };

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -145,7 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="source\defaultobject.cpp" />
+    <ClCompile Include="source\framebuffer.cpp" />
     <ClCompile Include="source\init.cpp" />
     <ClCompile Include="source\inputs.cpp" />
     <ClCompile Include="source\main.cpp" />
@@ -154,13 +154,14 @@
     <ClCompile Include="source\shader.cpp" />
     <ClCompile Include="source\storagebuffer.cpp" />
     <ClCompile Include="source\texture.cpp" />
+    <ClCompile Include="source\vertexarray.cpp" />
     <ClCompile Include="source\vertexbuffer.cpp" />
     <ClCompile Include="source\window.cpp" />
     <ClCompile Include="source\stb_image\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\defaultobject.h" />
     <ClInclude Include="source\errors.h" />
+    <ClInclude Include="source\framebuffer.h" />
     <ClInclude Include="source\inputs.h" />
     <ClInclude Include="source\model.h" />
     <ClInclude Include="source\overlay.h" />
@@ -168,22 +169,19 @@
     <ClInclude Include="source\storagebuffer.h" />
     <ClInclude Include="source\texture.h" />
     <ClInclude Include="source\vec3.h" />
+    <ClInclude Include="source\vertexarray.h" />
     <ClInclude Include="source\vertexbuffer.h" />
     <ClInclude Include="source\init.h" />
     <ClInclude Include="source\window.h" />
     <ClInclude Include="source\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\Circle.frag" />
-    <None Include="shaders\Circle.vert" />
-    <None Include="shaders\DotProduct.frag" />
     <None Include="shaders\3DProject.vert" />
-    <None Include="shaders\Raytrace.frag" />
-    <None Include="shaders\Reflections.frag" />
-    <None Include="shaders\Simple2D.vert" />
-    <None Include="shaders\SimpleColor.frag" />
-    <None Include="shaders\Square.frag" />
-    <None Include="shaders\Square.vert" />
+    <None Include="shaders\DotProduct.frag" />
+    <None Include="shaders\framebuffer.frag" />
+    <None Include="shaders\framebuffer.vert" />
+    <None Include="shaders\fullraytracing.frag" />
+    <None Include="shaders\fullraytracing.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
