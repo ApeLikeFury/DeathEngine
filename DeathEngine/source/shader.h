@@ -24,6 +24,8 @@ public:
 
 	shader(std::string vertex_path, std::string fragment_path);
 
+	void init(std::string vertex_path, std::string fragment_path);
+
 	void Uniform1f(const GLchar* uniform_name, float v1);
 
 	void Uniform2f(const GLchar* uniform_name, float v1, float v2);

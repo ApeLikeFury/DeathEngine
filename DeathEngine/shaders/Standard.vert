@@ -22,6 +22,7 @@ uniform vec2 iScreenResolution;
 uniform vec3 iLightPosition;
 uniform float iTime;
 
+
 float fov = 1;
 
 vec3 rotate(vec3 coords, vec3 rot, vec3 center)
@@ -59,12 +60,16 @@ vec3 rotate(vec3 coords, vec3 rot, vec3 center)
 
 void main()
 {
-    vec3 vp = position - iCameraPosition;
+    uv = position;
+    uv.xz *= iScreenResolution.y / iScreenResolution.x;
+
+    vec3 ry = rotate(uv, vec3(0,iCameraRotation.y,0), iCameraPosition);
+    vec3 rx = rotate(ry, vec3(iCameraRotation.x,0,0), iCameraPosition);
+    vec3 vp = rx - iCameraPosition;
     VertexNormal = normals;
     TextureCoordinate = texcoords;
     CameraPosition = iCameraPosition;
     LightPosition = iLightPosition;
-    uv = position;
 
     gl_Position = vec4(vp.x, vp.y, -1, vp.z/fov);
 

@@ -88,6 +88,11 @@ shader::shader(std::string vertex_path, std::string fragment_path)
 	shader_id = BindShaders(vertex_path, fragment_path);
 }
 
+void shader::init(std::string vertex_path, std::string fragment_path)
+{
+	shader_id = BindShaders(vertex_path, fragment_path);
+}
+
 void shader::Uniform1f(const GLchar* uniform_name, float v1)
 {
 

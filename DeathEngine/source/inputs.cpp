@@ -1,5 +1,6 @@
 #include <GLFW/glfw3.h>
 #include "inputs.h"
+#include "window.h"
 #include "vec3.h"
 #include <cmath>
 #include <iostream>
@@ -9,56 +10,81 @@ vec3<float> CameraPosition = { 0, 200, -150 };
 vec3<float> PlayerPosition;
 vec3<float> PlayerRotation;
 float speed = 1.0;
+float MouseSensitivity = 0.1;
 
-void PlayerControls(GLFWwindow* window_id, float &LastTime)
+bool PlayerControls(window win, float &LastTime)
 {
     float Time_Passed = glfwGetTime() - LastTime;
     LastTime = glfwGetTime();
     float radians = 0.01745329;
 
-    if (glfwGetKey(window_id, GLFW_KEY_W) == GLFW_PRESS)
+    if (glfwGetKey(win.window_id, GLFW_KEY_W) == GLFW_PRESS)
     {
         CameraPosition.z += cos(CameraRotation.y * radians) * Time_Passed * 200;
         CameraPosition.x += sin(CameraRotation.y * radians) * Time_Passed * 200;
         PlayerRotation.y = CameraRotation.y;
     }
-    else if (glfwGetKey(window_id, GLFW_KEY_S) == GLFW_PRESS)
+    else if (glfwGetKey(win.window_id, GLFW_KEY_S) == GLFW_PRESS)
     {
         CameraPosition.z -= cos(CameraRotation.y * radians) * Time_Passed * 200;
         CameraPosition.x -= sin(CameraRotation.y * radians) * Time_Passed * 200;
         PlayerRotation.y = CameraRotation.y;
     }
 
-    if (glfwGetKey(window_id, GLFW_KEY_D) == GLFW_PRESS)
+    if (glfwGetKey(win.window_id, GLFW_KEY_D) == GLFW_PRESS)
     {
         CameraPosition.z += cos((CameraRotation.y + 90) * radians) * Time_Passed * 200;
         CameraPosition.x += sin((CameraRotation.y + 90) * radians) * Time_Passed * 200;
         PlayerRotation.y = CameraRotation.y;
     }
-    else if (glfwGetKey(window_id, GLFW_KEY_A) == GLFW_PRESS)
+    else if (glfwGetKey(win.window_id, GLFW_KEY_A) == GLFW_PRESS)
     {
         CameraPosition.z -= cos((CameraRotation.y + 90) * radians) * Time_Passed * 200;
         CameraPosition.x -= sin((CameraRotation.y + 90) * radians) * Time_Passed * 200;
         PlayerRotation.y = CameraRotation.y;
     }
 
-    if (glfwGetKey(window_id, GLFW_KEY_E) == GLFW_PRESS)
+    if (glfwGetKey(win.window_id, GLFW_KEY_E) == GLFW_PRESS)
     {
         CameraPosition.y += Time_Passed*200;
     }
-    else if (glfwGetKey(window_id, GLFW_KEY_Q) == GLFW_PRESS)
+    else if (glfwGetKey(win.window_id, GLFW_KEY_Q) == GLFW_PRESS)
     {
         CameraPosition.y -= Time_Passed * 200;
     }
+
+    if (glfwGetKey(win.window_id, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
+        return true;
+    }
+
+    return false;
 }
+
+float yrot, xrot;
+float mposy, mposx;
+bool firstpress = true;
 
 void cursorPositionCallback(GLFWwindow* window, double xPos, double yPos)
 {
-    float xmov = xPos - 2560 / 2;
-    float ymov = yPos - 1440 / 2;
-    CameraRotation.x += ymov / 30;
-    CameraRotation.y += xmov / 30;
-    glfwSetCursorPos(window, 2560 / 2, 1440 / 2);
+    int state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
+    if (state == GLFW_PRESS)
+    {
+        if (firstpress == true)
+        {
+            yrot = CameraRotation.y;
+            xrot = CameraRotation.x;
+            mposy = yPos;
+            mposx = xPos;
+            firstpress = false;
+        }
+        CameraRotation.y = yrot + (xPos - mposx) * MouseSensitivity;
+        CameraRotation.x = xrot + (yPos - mposy) * MouseSensitivity;
+    }
+    else if (state == GLFW_RELEASE)
+    {
+        firstpress = true;
+    }
 }
 
 void KeyPress(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -66,9 +92,9 @@ void KeyPress(GLFWwindow* window, int key, int scancode, int action, int mods)
     
 }
 
-void InitialiseInputs(GLFWwindow* window_id)
+void InitialiseInputs(window win)
 {
-    glfwSetCursorPosCallback(window_id, cursorPositionCallback);
-    glfwSetInputMode(window_id, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-    glfwSetKeyCallback(window_id, KeyPress);
+    glfwSetCursorPosCallback(win.window_id, cursorPositionCallback);
+    //glfwSetInputMode(win.window_id, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    glfwSetKeyCallback(win.window_id, KeyPress);
 }

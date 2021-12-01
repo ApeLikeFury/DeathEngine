@@ -12,65 +12,73 @@
 #include "overlay.h"
 #include "vec3.h"
 #include "storagebuffer.h"
+#include "framebuffer.h"
 
 extern vec3<float> CameraRotation;
 extern vec3<float> CameraPosition;
 extern vec3<float> PlayerPosition;
 extern vec3<float> PlayerRotation;
-extern float speed;
 
 int main(void)
 {
     InitialiseGLFW(4.3);
-    window win(1000, 1000);
+    window win(1920, 1080);
     InitialiseGLEW();
     glfwSwapInterval(1);
-    //InitialiseInputs(win.window_id);
+    InitialiseInputs(win);
 
-    shader dot("shaders/3Dproject.vert", "shaders/DotProduct.frag");
+    shader standard("shaders/Standard.vert", "shaders/Standard.frag");
+    standard.Uniform1i("iTexture", 0);
 
-    shader white("shaders/fullraytracing.vert", "shaders/fullraytracing.frag");
-    white.Uniform1i("iTexture", 0);
-
-    std::vector<float> positions =
-    {
-        1.0,1.0, 1.0,-1.0, -1.0,1.0,
-        -1.0,-1.0, 1.0,-1.0, -1.0,1.0
-    };
-
-    vertexarray vao;
-    vao.bind();
-    vertexbuffer canvas(positions, 2, 0);
-    vao.unbind();
+    shader reflections("shaders/RaytracedReflections.vert", "shaders/RaytracedReflections.frag");
+    reflections.Uniform1i("iTexture", 0);
 
     model landscape;
-    landscape.ImportObj("models/monkeyscene.obj");
-    landscape.BindShader(dot);
-    landscape.ImportTexture("textures/ruby.png");
+    landscape.ImportObj("models/environment.obj");
+    landscape.BindShader(standard);
+    landscape.ImportTexture("textures/yes.png");
     landscape.LoadModel();
 
-    landscape.rotation.y == 90;
-
-    std::vector<float> random;
+    model mirrors;
+    mirrors.ImportObj("models/reflective.obj");
+    mirrors.BindShader(reflections);
+    mirrors.ImportTexture("textures/yes.png");
+    mirrors.LoadModel();
 
     storagebuffer vertexpositions(landscape.vertex_positions, 0);
     storagebuffer vertexnormals(landscape.vertex_normals, 1);
+    storagebuffer vertextexcoords(landscape.vertex_texcoords, 2);
 
-    speed = 100;
+    framebuffer fbo(win);
 
     float LastTime = glfwGetTime();
 
     while (win.open())
     {
-        PlayerControls(win.window_id, LastTime);
+        if (PlayerControls(win, LastTime)) { break; }
+       
+        standard.use();
+        standard.Uniform3f("iCameraPosition", CameraPosition.x, CameraPosition.y, CameraPosition.z);
+        standard.Uniform3f("iLightPosition", 0, 2500, 0);
+        standard.Uniform1f("iTime", glfwGetTime());
+        standard.Uniform3f("iCameraRotation", CameraRotation.x, CameraRotation.y, CameraRotation.z);
+        standard.Uniform2f("iScreenResolution", win.window_width, win.window_height);
 
-        dot.Uniform3f("iCameraPosition", CameraPosition.x, CameraPosition.y, CameraPosition.z);
-        dot.Uniform3f("iLightPosition", 0, 2500, 0);
-        dot.Uniform1f("iTime", glfwGetTime());
-        dot.Uniform3f("iCameraRotation", CameraRotation.x, CameraRotation.y, CameraRotation.z);
+        reflections.use();
+        reflections.Uniform3f("iCameraPosition", CameraPosition.x, CameraPosition.y, CameraPosition.z);
+        reflections.Uniform3f("iLightPosition", 0, 2500, 0);
+        reflections.Uniform1f("iTime", glfwGetTime());
+        reflections.Uniform3f("iCameraRotation", CameraRotation.x, CameraRotation.y, CameraRotation.z);
+        reflections.Uniform2f("iScreenResolution", win.window_width, win.window_height);
 
+        fbo.bind();
 
         landscape.Draw();
+        mirrors.Draw();
+
+        fbo.unbind();
+
+        fbo.Draw();
     }
 
     win.terminate();

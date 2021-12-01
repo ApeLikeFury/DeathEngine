@@ -1,7 +1,8 @@
 #pragma once
 #include <GLFW/glfw3.h>
+#include "window.h"
 
-void InitialiseInputs(GLFWwindow* window_id);
+void InitialiseInputs(window win);
 
-void PlayerControls(GLFWwindow* window_id, float& LastTime);
+bool PlayerControls(window win, float& LastTime);
 

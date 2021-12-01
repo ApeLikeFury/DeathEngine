@@ -24,6 +24,7 @@ void InitialiseGLEW()
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
+    glClearColor(0.7, 0.7, 1, 1);
 }
 
 void Terminate()

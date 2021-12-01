@@ -54,6 +54,9 @@
     <ClCompile Include="source\framebuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\starfish_ui\canvas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\window.h">
@@ -98,13 +101,18 @@
     <ClInclude Include="source\framebuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="source\starfish_ui\canvas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\3DProject.vert" />
-    <None Include="shaders\fullraytracing.vert" />
-    <None Include="shaders\fullraytracing.frag" />
-    <None Include="shaders\framebuffer.vert" />
+    <None Include="shaders\RaytracedReflections.vert" />
+    <None Include="shaders\RaytracedReflections.frag" />
+    <None Include="shaders\Standard.frag" />
+    <None Include="shaders\Standard.vert" />
     <None Include="shaders\framebuffer.frag" />
-    <None Include="shaders\DotProduct.frag" />
+    <None Include="shaders\framebuffer.vert" />
+    <None Include="source\starfish_ui\starfish_shaders\rectangle.vert" />
+    <None Include="source\starfish_ui\starfish_shaders\rectangle.frag" />
   </ItemGroup>
 </Project>
