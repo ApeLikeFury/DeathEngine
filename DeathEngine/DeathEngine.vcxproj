@@ -149,6 +149,7 @@
     <ClCompile Include="source\init.cpp" />
     <ClCompile Include="source\inputs.cpp" />
     <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\entity.cpp" />
     <ClCompile Include="source\model.cpp" />
     <ClCompile Include="source\overlay.cpp" />
     <ClCompile Include="source\shader.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="source\errors.h" />
     <ClInclude Include="source\framebuffer.h" />
     <ClInclude Include="source\inputs.h" />
+    <ClInclude Include="source\entity.h" />
     <ClInclude Include="source\model.h" />
     <ClInclude Include="source\overlay.h" />
     <ClInclude Include="source\shader.h" />

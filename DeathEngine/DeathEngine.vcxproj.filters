@@ -30,7 +30,7 @@
     <ClCompile Include="source\shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\model.cpp">
+    <ClCompile Include="source\entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\inputs.cpp">
@@ -57,6 +57,9 @@
     <ClCompile Include="source\starfish_ui\canvas.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\window.h">
@@ -74,7 +77,7 @@
     <ClInclude Include="source\errors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\model.h">
+    <ClInclude Include="source\entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\vec3.h">
@@ -102,6 +105,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\starfish_ui\canvas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

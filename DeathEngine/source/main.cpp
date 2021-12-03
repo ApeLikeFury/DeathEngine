@@ -5,7 +5,7 @@
 #include "window.h"
 #include "shader.h"
 #include "init.h"
-#include "model.h"
+#include "entity.h"
 #include "inputs.h"
 #include "vertexbuffer.h"
 #include "texture.h"
@@ -33,13 +33,13 @@ int main(void)
     shader reflections("shaders/RaytracedReflections.vert", "shaders/RaytracedReflections.frag");
     reflections.Uniform1i("iTexture", 0);
 
-    model landscape;
+    entity landscape;
     landscape.ImportObj("models/environment.obj");
     landscape.BindShader(standard);
     landscape.ImportTexture("textures/yes.png");
     landscape.LoadModel();
 
-    model mirrors;
+    entity mirrors;
     mirrors.ImportObj("models/reflective.obj");
     mirrors.BindShader(reflections);
     mirrors.ImportTexture("textures/yes.png");

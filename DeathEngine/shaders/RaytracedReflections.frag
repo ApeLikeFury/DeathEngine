@@ -173,7 +173,7 @@ void main()
     ray.reflection = reflect(camvector, VertexNormal);
     for (int i = 0; i < 1; i ++)
     {
-       ray = raytrace(uv, ray.reflection + offset);
+       ray = raytrace(uv, ray.reflection + offset*0);
     }
 
     vec4 texColor = texture(iTexture, TextureCoordinate);
