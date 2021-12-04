@@ -146,6 +146,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\framebuffer.cpp" />
+    <ClCompile Include="source\imgui\imgui-master\imgui.cpp" />
+    <ClCompile Include="source\imgui\imgui-master\imgui_demo.cpp" />
+    <ClCompile Include="source\imgui\imgui-master\imgui_draw.cpp" />
+    <ClCompile Include="source\imgui\imgui-master\imgui_impl_glfw.cpp" />
+    <ClCompile Include="source\imgui\imgui-master\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="source\imgui\imgui-master\imgui_tables.cpp" />
+    <ClCompile Include="source\imgui\imgui-master\imgui_widgets.cpp" />
     <ClCompile Include="source\init.cpp" />
     <ClCompile Include="source\inputs.cpp" />
     <ClCompile Include="source\main.cpp" />
@@ -153,9 +160,9 @@
     <ClCompile Include="source\model.cpp" />
     <ClCompile Include="source\overlay.cpp" />
     <ClCompile Include="source\shader.cpp" />
-    <ClCompile Include="source\starfish_ui\canvas.cpp" />
     <ClCompile Include="source\storagebuffer.cpp" />
     <ClCompile Include="source\texture.cpp" />
+    <ClCompile Include="source\userinterface.cpp" />
     <ClCompile Include="source\vertexarray.cpp" />
     <ClCompile Include="source\vertexbuffer.cpp" />
     <ClCompile Include="source\window.cpp" />
@@ -164,14 +171,23 @@
   <ItemGroup>
     <ClInclude Include="source\errors.h" />
     <ClInclude Include="source\framebuffer.h" />
+    <ClInclude Include="source\imgui\imgui-master\imconfig.h" />
+    <ClInclude Include="source\imgui\imgui-master\imgui.h" />
+    <ClInclude Include="source\imgui\imgui-master\imgui_impl_glfw.h" />
+    <ClInclude Include="source\imgui\imgui-master\imgui_impl_opengl3.h" />
+    <ClInclude Include="source\imgui\imgui-master\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="source\imgui\imgui-master\imgui_internal.h" />
+    <ClInclude Include="source\imgui\imgui-master\imstb_rectpack.h" />
+    <ClInclude Include="source\imgui\imgui-master\imstb_textedit.h" />
+    <ClInclude Include="source\imgui\imgui-master\imstb_truetype.h" />
     <ClInclude Include="source\inputs.h" />
     <ClInclude Include="source\entity.h" />
     <ClInclude Include="source\model.h" />
     <ClInclude Include="source\overlay.h" />
     <ClInclude Include="source\shader.h" />
-    <ClInclude Include="source\starfish_ui\canvas.h" />
     <ClInclude Include="source\storagebuffer.h" />
     <ClInclude Include="source\texture.h" />
+    <ClInclude Include="source\userinterface.h" />
     <ClInclude Include="source\vec3.h" />
     <ClInclude Include="source\vertexarray.h" />
     <ClInclude Include="source\vertexbuffer.h" />
@@ -186,8 +202,6 @@
     <None Include="shaders\Standard.frag" />
     <None Include="shaders\RaytracedReflections.frag" />
     <None Include="shaders\Standard.vert" />
-    <None Include="source\starfish_ui\starfish_shaders\rectangle.frag" />
-    <None Include="source\starfish_ui\starfish_shaders\rectangle.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

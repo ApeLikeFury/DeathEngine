@@ -60,7 +60,7 @@ vec3 rotate(vec3 coords, vec3 rot, vec3 center)
 
 void main()
 {
-    uv = position;
+    uv = position*1000;
     uv.xz *= iScreenResolution.y / iScreenResolution.x;
     
     vec3 ry = rotate(uv, vec3(0,iCameraRotation.y,0), iCameraPosition);

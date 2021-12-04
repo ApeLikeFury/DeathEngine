@@ -9,10 +9,12 @@
 class model
 {
 public:
+
 	std::string object_name;
 	std::vector<float> vertex_positions;
 	std::vector<float> vertex_texcoords;
 	std::vector<float> vertex_normals;
+
 
 	shader object_shader;
 	texture model_texture;
@@ -23,12 +25,18 @@ public:
 	vec3<float> centre = { 0.0, 0.0, 0.0 };
 
 	void GetCentre();
-	
-	model(std::vector<float> vertex_positions, std::vector<float> vertex_texcoords, std::vector<float> vertex_normals);
 
 	model();
 
+	void SmoothNormals();
+	
 	void BindShader(shader shader_choice);
 
+	void SetUniforms();
+
 	void BindTexture(texture texture_choice);
+
+	void Load();
+
+	void Draw();
 };

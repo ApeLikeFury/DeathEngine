@@ -13,6 +13,8 @@
 #include "vec3.h"
 #include "storagebuffer.h"
 #include "framebuffer.h"
+#include "userinterface.h"
+#include "texture.h"
 
 extern vec3<float> CameraRotation;
 extern vec3<float> CameraPosition;
@@ -26,24 +28,33 @@ int main(void)
     InitialiseGLEW();
     glfwSwapInterval(1);
     InitialiseInputs(win);
+    InitialiseImGui(win);
+
 
     shader standard("shaders/Standard.vert", "shaders/Standard.frag");
     standard.Uniform1i("iTexture", 0);
 
     shader reflections("shaders/RaytracedReflections.vert", "shaders/RaytracedReflections.frag");
-    reflections.Uniform1i("iTexture", 0);
+
+    texture wallpaper("textures/wallpaper.jpg");
+    texture flooring("textures/Wood 02 Color 02.png");
 
     entity landscape;
-    landscape.ImportObj("models/environment.obj");
-    landscape.BindShader(standard);
-    landscape.ImportTexture("textures/yes.png");
-    landscape.LoadModel();
+    landscape.ImportObj("models/interior.obj");
+    landscape.BindAllShaders(standard);
+    landscape.BindAllTextures("textures/Wood 02 Color 01.png");
 
-    entity mirrors;
-    mirrors.ImportObj("models/reflective.obj");
-    mirrors.BindShader(reflections);
-    mirrors.ImportTexture("textures/yes.png");
-    mirrors.LoadModel();
+    landscape.models[2].BindTexture(wallpaper);
+    landscape.models[0].BindTexture(flooring);
+
+    landscape.models[3].BindShader(reflections);
+    landscape.models[3].BindTexture(wallpaper);
+
+    landscape.LoadModels();
+
+    entity test;
+    test.ImportObj("models/environment.obj");
+    test.location.x = 1000;
 
     storagebuffer vertexpositions(landscape.vertex_positions, 0);
     storagebuffer vertexnormals(landscape.vertex_normals, 1);
@@ -74,11 +85,13 @@ int main(void)
         fbo.bind();
 
         landscape.Draw();
-        mirrors.Draw();
+        //mirrors.Draw();
 
         fbo.unbind();
 
         fbo.Draw();
+
+        //RenderUI();
     }
 
     win.terminate();

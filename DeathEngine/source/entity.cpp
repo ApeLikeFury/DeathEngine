@@ -22,50 +22,6 @@ void entity::SetUniforms()
 	object_shader.Uniform3f("iObjectCentre", centre.x, centre.y, centre.z);
 }
 
-void entity::SetCentre()
-{
-	vec3<float> highest = { vertex_positions[0], vertex_positions[1], vertex_positions[2] };
-	vec3<float> lowest  = { vertex_positions[0], vertex_positions[1], vertex_positions[2] };
-
-	for (unsigned int i = 0; i < size(vertex_positions)/3; i++)
-	{
-		unsigned int index = i * 3;
-		vec3<float> xyz = { vertex_positions[index], vertex_positions[index + 1], vertex_positions[index + 2] };
-
-		if (xyz.x > highest.x)
-		{
-			highest.x = xyz.x;
-		}
-		else if (xyz.x < lowest.x)
-		{
-			lowest.x = xyz.x;
-		}
-
-		if (xyz.y > highest.y)
-		{
-			highest.y = xyz.y;
-		}
-		else if (xyz.y < lowest.y)
-		{
-			lowest.y = xyz.y;
-		}
-
-		if (xyz.z > highest.z)
-		{
-			highest.z = xyz.z;
-		}
-		else if (xyz.z < lowest.z)
-		{
-			lowest.z = xyz.z;
-		}
-	}
-
-	float avgx = (highest.x + lowest.x) / 2.0;
-	float avgy = (highest.y + lowest.y) / 2.0;
-	float avgz = (highest.z + lowest.z) / 2.0;
-
-	centre = { avgx, avgy, avgz };
-}
 
 // public members
 
@@ -75,6 +31,8 @@ void entity::ImportObj(std::string filepath)
 	std::stringstream ss;
 	std::fstream myFile;
 
+	model currentmodel;
+
 	std::vector<vec3<float>> temp_vertex_normals;
 	std::vector<vec2<float>> temp_vertex_texcoords;
 	std::vector<vec3<float>> temp_vertex_positions;
@@ -83,12 +41,12 @@ void entity::ImportObj(std::string filepath)
 	std::vector<unsigned int> vt_indices;
 	std::vector<unsigned int> vn_indices;
 
+
+
 	myFile.open(filepath, std::ios::in);
 	if (myFile.is_open())
 	{
 		int objects = 0;
-
-		model currentmodel;
 
 		std::string line;
 		std::string prefix;
@@ -102,15 +60,29 @@ void entity::ImportObj(std::string filepath)
 			{
 				objects++;
 
-				if (objects > 1)
+				if (size(indices) > 0)
 				{
-					ss >> currentmodel.object_name;
-
 					for (unsigned int i = 0; i < size(indices); i++)
 					{
 						unsigned int index = indices[i];
 						unsigned int vt_index = vt_indices[i];
 						unsigned int vn_index = vn_indices[i];
+
+						if (size(temp_vertex_positions) < index)
+						{
+							std::cout << "error: positions array too short in model: " << currentmodel.object_name;
+							__debugbreak;
+						}
+						else if (size(temp_vertex_texcoords) < vt_index)
+						{
+							std::cout << "error: positions array too short in model: " << currentmodel.object_name;
+							__debugbreak;
+						}
+						else if (size(temp_vertex_normals) < vn_index)
+						{
+							std::cout << "error: positions array too short in model: " << currentmodel.object_name;
+							__debugbreak;
+						}
 
 						vec3<float> position = temp_vertex_positions[index];
 						vec2<float> texcoord = temp_vertex_texcoords[vt_index];
@@ -126,13 +98,29 @@ void entity::ImportObj(std::string filepath)
 						currentmodel.vertex_normals.push_back(normal.x);
 						currentmodel.vertex_normals.push_back(normal.y);
 						currentmodel.vertex_normals.push_back(normal.z);
-					}
-				}
 
-				models.push_back(currentmodel);
+						vertex_positions.push_back(position.x);
+						vertex_positions.push_back(position.y);
+						vertex_positions.push_back(position.z);
+
+						vertex_texcoords.push_back(texcoord.x);
+						vertex_texcoords.push_back(texcoord.y);
+
+						vertex_normals.push_back(normal.x);
+						vertex_normals.push_back(normal.y);
+						vertex_normals.push_back(normal.z);
+					}
+
+					models.push_back(currentmodel);
+				}
 
 				model newmodel;
 				currentmodel = newmodel;
+				ss >> currentmodel.object_name;
+
+				indices.clear();
+				vt_indices.clear();
+				vn_indices.clear();
 			}
 			else if (prefix == "vn")
 			{
@@ -189,27 +177,63 @@ void entity::ImportObj(std::string filepath)
 			}
 		}
 
-		for (unsigned int i = 0; i < size(indices); i++)
+		objects++;
+
+		if (size(indices) > 0)
 		{
-			unsigned int index = indices[i];
-			unsigned int vt_index = vt_indices[i];
-			unsigned int vn_index = vn_indices[i];
+			for (unsigned int i = 0; i < size(indices); i++)
+			{
+				unsigned int index = indices[i];
+				unsigned int vt_index = vt_indices[i];
+				unsigned int vn_index = vn_indices[i];
 
-			vec3<float> position = temp_vertex_positions[index];
-			vec2<float> texcoord = temp_vertex_texcoords[vt_index];
-			vec3<float> normal = temp_vertex_normals[vn_index];
+				if (size(temp_vertex_positions) < index)
+				{
+					std::cout << "error: positions array too short in model: " << currentmodel.object_name;
+					__debugbreak;
+				}
+				else if (size(temp_vertex_texcoords) < vt_index)
+				{
+					std::cout << "error: positions array too short in model: " << currentmodel.object_name;
+					__debugbreak;
+				}
+				else if (size(temp_vertex_normals) < vn_index)
+				{
+					std::cout << "error: positions array too short in model: " << currentmodel.object_name;
+					__debugbreak;
+				}
 
-			vertex_positions.push_back(position.x);
-			vertex_positions.push_back(position.y);
-			vertex_positions.push_back(position.z);
+				vec3<float> position = temp_vertex_positions[index];
+				vec2<float> texcoord = temp_vertex_texcoords[vt_index];
+				vec3<float> normal = temp_vertex_normals[vn_index];
 
-			vertex_texcoords.push_back(texcoord.x);
-			vertex_texcoords.push_back(texcoord.y);
+				currentmodel.vertex_positions.push_back(position.x);
+				currentmodel.vertex_positions.push_back(position.y);
+				currentmodel.vertex_positions.push_back(position.z);
 
-			vertex_normals.push_back(normal.x);
-			vertex_normals.push_back(normal.y);
-			vertex_normals.push_back(normal.z);
+				currentmodel.vertex_texcoords.push_back(texcoord.x);
+				currentmodel.vertex_texcoords.push_back(texcoord.y);
+
+				currentmodel.vertex_normals.push_back(normal.x);
+				currentmodel.vertex_normals.push_back(normal.y);
+				currentmodel.vertex_normals.push_back(normal.z);
+
+				vertex_positions.push_back(position.x);
+				vertex_positions.push_back(position.y);
+				vertex_positions.push_back(position.z);
+
+				vertex_texcoords.push_back(texcoord.x);
+				vertex_texcoords.push_back(texcoord.y);
+
+				vertex_normals.push_back(normal.x);
+				vertex_normals.push_back(normal.y);
+				vertex_normals.push_back(normal.z);
+			}
+
+			models.push_back(currentmodel);
 		}
+		
+
 	}
 	else
 	{
@@ -217,105 +241,43 @@ void entity::ImportObj(std::string filepath)
 	}
 }
 
-void entity::ComputeBoundaries()
-{
-	for (size_t i = 0; i < size(vertex_positions); i += 9)
-	{
-		vec3<float> p1 = { vertex_positions[i + 0], vertex_positions[i + 1], vertex_positions[i + 2] };
-		vec3<float> p2 = { vertex_positions[i + 3], vertex_positions[i + 4], vertex_positions[i + 5] };
-		vec3<float> p3 = { vertex_positions[i + 6], vertex_positions[i + 7], vertex_positions[i + 8] };
-
-		float x[3] = { p1.x, p2.x, p3.x };
-		float y[3] = { p1.y, p2.y, p3.y };
-		float z[3] = { p1.z, p2.z, p3.z };
-
-		float x_max = p1.x;
-		float y_max = p1.y;
-		float z_max = p1.z;
-
-		float x_min = p1.x;
-		float y_min = p1.y;
-		float z_min = p1.z;
-
-		for (size_t i = 0; i < 3; i++)
-		{
-			if (x[i] > x_max)
-			{
-				x_max = x[i];
-			}
-			else if (x[i] < x_min)
-			{
-				x_min = x[i];
-			}
-
-			if (y[i] > y_max)
-			{
-				y_max = y[i];
-			}
-			else if (y[i] < y_min)
-			{
-				y_min = y[i];
-			}
-
-			if (z[i] > z_max)
-			{
-				z_max = z[i];
-			}
-			else if (z[i] < z_min)
-			{
-				z_min = z[i];
-			}
-		}
-
-		position_boundaries.push_back(x_max);
-		position_boundaries.push_back(y_max);
-		position_boundaries.push_back(z_max);
-		position_boundaries.push_back(x_min);
-		position_boundaries.push_back(y_min);
-		position_boundaries.push_back(z_min);
-		position_boundaries.push_back(x_min);
-		position_boundaries.push_back(y_min);
-		position_boundaries.push_back(z_min);
-	}
-}
-
-void entity::ImportTexture(std::string filepath)
-{
-	model_texture.init(filepath);
-}
-
-void entity::BindShader(shader shader_choice)
-{
-	object_shader = shader_choice;
-}
 
 void entity::Draw()
 {
-	glDepthFunc(GL_LESS);
-	object_shader.use();
-	model_texture.Bind(0);
-	SetUniforms();
-	vao.bind();
-	glDrawArrays(GL_TRIANGLES, 0, size(vertex_positions));
-	vao.unbind();
+	for (size_t i = 0; i < size(models); i++)
+	{
+		models[i].Draw();
+	}
 }
 
-void entity::LoadModel()
+void entity::LoadModels()
 {
-	SetCentre();
-	vao.bind();
-
-	vertexbuffer positions(vertex_positions, 3, 0);
-	vertexbuffer normals(vertex_normals, 3, 1);
-	vertexbuffer texcoords(vertex_texcoords, 2, 2);
-
-	vao.unbind();
+	for (size_t i = 0; i < size(models); i++)
+	{
+		models[i].Load();
+	}
 }
 
-unsigned int entity::length()
+void entity::BindAllShaders(shader shader_choice)
 {
-	return size(vertex_positions);
+	for (size_t i = 0; i < size(models); i++)
+	{
+		models[i].object_shader = shader_choice;
+	}
 }
+
+void entity::BindAllTextures(std::string filepath)
+{
+	texture tex;
+	tex.init(filepath);
+
+	for (size_t i = 0; i < size(models); i++)
+	{
+		models[i].model_texture = tex;
+	}
+}
+
+
 
 void entity::Rotate(vec3<float> xyz)
 {

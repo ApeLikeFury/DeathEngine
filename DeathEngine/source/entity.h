@@ -12,14 +12,12 @@ class entity
 {
 	void SetUniforms();
 
-	void SetCentre();
-
 public:
-	std::vector<model> models;
 	std::vector<float> vertex_positions;
 	std::vector<float> vertex_texcoords;
 	std::vector<float> vertex_normals;
-	std::vector<float> position_boundaries;
+
+	std::vector<model> models;
 
 	shader object_shader;
 	texture model_texture;
@@ -31,17 +29,13 @@ public:
 
 	void ImportObj(std::string filepath);
 
-	void ComputeBoundaries();
-
-	void ImportTexture(std::string filepath);
-
-	void BindShader(shader shader_choice);
-
 	void Draw();
 
-	void LoadModel();
+	void LoadModels();
 
-	unsigned int length();
+	void BindAllShaders(shader shader_choice);
+
+	void BindAllTextures(std::string filepath);
 
 	void Rotate(vec3<float> xyz);
 	

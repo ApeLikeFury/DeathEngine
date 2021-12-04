@@ -50,12 +50,13 @@ struct rayinfo
 float GetDiffuse(vec3 Normal, vec3 LightPos, vec3 Coord)
 {
     vec3 LightVector = normalize(LightPos - Coord);
-    float Diffuse = max(dot(Normal, LightVector), 0.1);
+    float distbr = 1/sqrt(distance(Coord, LightPos)/10000);
+    float Diffuse = max(dot(Normal, LightVector)*distbr, 0.1);
 
     float specularlight = 0.5;
     vec3 viewdirection = normalize(CameraPosition - Coord);
     vec3 reflectiondirection = reflect(-LightVector, Normal);
-    float specamount = pow(max(dot(viewdirection, reflectiondirection), 0.0), 2);
+    float specamount = pow(max(dot(viewdirection, reflectiondirection), 0.0), 8);
     float specular = specamount * specularlight;
 
     return Diffuse + specular;
@@ -63,7 +64,7 @@ float GetDiffuse(vec3 Normal, vec3 LightPos, vec3 Coord)
 
 rayinfo Intersection(vec3 v0, vec3 v1, vec3 v2, vec3 RayPos, vec3 RayDir)
 {
-    RayPos += RayDir;
+    RayPos += RayDir*0.00001;
     rayinfo ray;
     ray.hit = false;
 
@@ -138,6 +139,10 @@ rayinfo raytrace(vec3 StartPosition, vec3 RayDirection)
         vec2 vt1 = vec2(texcoords[ti], texcoords[ti+1]);
         vec2 vt2 = vec2(texcoords[ti+2], texcoords[ti+3]);
         vec2 vt3 = vec2(texcoords[ti+4], texcoords[ti+5]);
+
+        v1 *= 1000;
+        v2 *= 1000;
+        v3 *= 1000;
     
         ray = Intersection(v1, v2, v3, StartPosition, RayDirection);
 
@@ -167,17 +172,17 @@ void main()
     vec3 camvector = normalize(uv-CameraPosition);
     vec3 lightvector = normalize(uv-LightPosition);
     vec3 offset = vec3(random(uv.xy),random(uv.xz),random(uv.yz))-0.5;
-    offset /= 10;
+    offset /= 100;
 
     rayinfo ray;
     ray.reflection = reflect(camvector, VertexNormal);
     for (int i = 0; i < 1; i ++)
     {
-       ray = raytrace(uv, ray.reflection + offset*0);
+       ray = raytrace(uv, ray.reflection + offset);
     }
 
     vec4 texColor = texture(iTexture, TextureCoordinate);
-    vec3 color = texColor.xyz * GetDiffuse(VertexNormal,LightPosition,uv)/10 + ray.color;
+    vec3 color = GetDiffuse(VertexNormal,LightPosition,uv)/10 + ray.color;
     
-    fragColor = vec4(color*2, 1.0);
+    fragColor = vec4(color, 1.0);
 };

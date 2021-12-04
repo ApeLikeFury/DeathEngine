@@ -13,12 +13,13 @@ uniform sampler2D iTexture;
 float GetDiffuse(vec3 Normal, vec3 LightPos, vec3 Coord)
 {
     vec3 LightVector = normalize(LightPos - Coord);
-    float Diffuse = max(dot(Normal, LightVector), 0.1);
+    float distbr = 1/sqrt(distance(Coord, LightPos)/10000);
+    float Diffuse = max(dot(Normal, LightVector)*distbr, 0.1);
 
     float specularlight = 0.5;
     vec3 viewdirection = normalize(CameraPosition - Coord);
     vec3 reflectiondirection = reflect(-LightVector, Normal);
-    float specamount = pow(max(dot(viewdirection, reflectiondirection), 0.0), 2);
+    float specamount = pow(max(dot(viewdirection, reflectiondirection), 0.0), 8);
     float specular = specamount * specularlight;
 
     return Diffuse + specular;
