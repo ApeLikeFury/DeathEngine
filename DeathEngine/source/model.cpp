@@ -87,6 +87,11 @@ void model::BindTexture(texture texture_choice)
 	model_texture = texture_choice;
 }
 
+void model::BindSpecmap(texture specmap_choice)
+{
+	model_specmap = specmap_choice;
+}
+
 void model::Load()
 {
 	GetCentre();

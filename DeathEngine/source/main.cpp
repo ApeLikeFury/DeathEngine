@@ -39,26 +39,31 @@ int main(void)
     texture wallpaper("textures/wallpaper.jpg");
     texture flooring("textures/Wood 02 Color 02.png");
 
-    entity landscape;
-    landscape.ImportObj("models/interior.obj");
-    landscape.BindAllShaders(standard);
-    landscape.BindAllTextures("textures/Wood 02 Color 01.png");
+    entity room;
+    room.ImportObj("models/interior.obj");
+    room.BindAllShaders(standard);
+    room.BindAllTextures("textures/Wood 02 Color 01.png");
 
-    landscape.models[2].BindTexture(wallpaper);
-    landscape.models[0].BindTexture(flooring);
+    room.models[2].BindTexture(wallpaper);
+    room.models[0].BindTexture(flooring);
 
-    landscape.models[3].BindShader(reflections);
-    landscape.models[3].BindTexture(wallpaper);
+    room.models[3].BindShader(reflections);
+    room.models[3].BindTexture(wallpaper);
 
-    landscape.LoadModels();
+    room.LoadModels();
 
     entity test;
     test.ImportObj("models/environment.obj");
     test.location.x = 1000;
 
-    storagebuffer vertexpositions(landscape.vertex_positions, 0);
-    storagebuffer vertexnormals(landscape.vertex_normals, 1);
-    storagebuffer vertextexcoords(landscape.vertex_texcoords, 2);
+    storagebuffer vertexpositions(room.vertex_positions, 0);
+    storagebuffer vertexnormals(room.vertex_normals, 1);
+    storagebuffer vertextexcoords(room.vertex_texcoords, 2);
+
+
+    std::vector<float> lightpositions = { 0, 0.5, 0 };
+
+    storagebuffer lightsources(lightpositions, 3);
 
     framebuffer fbo(win);
 
@@ -70,21 +75,19 @@ int main(void)
        
         standard.use();
         standard.Uniform3f("iCameraPosition", CameraPosition.x, CameraPosition.y, CameraPosition.z);
-        standard.Uniform3f("iLightPosition", 0, 2500, 0);
         standard.Uniform1f("iTime", glfwGetTime());
         standard.Uniform3f("iCameraRotation", CameraRotation.x, CameraRotation.y, CameraRotation.z);
         standard.Uniform2f("iScreenResolution", win.window_width, win.window_height);
 
         reflections.use();
         reflections.Uniform3f("iCameraPosition", CameraPosition.x, CameraPosition.y, CameraPosition.z);
-        reflections.Uniform3f("iLightPosition", 0, 2500, 0);
         reflections.Uniform1f("iTime", glfwGetTime());
         reflections.Uniform3f("iCameraRotation", CameraRotation.x, CameraRotation.y, CameraRotation.z);
         reflections.Uniform2f("iScreenResolution", win.window_width, win.window_height);
 
         fbo.bind();
 
-        landscape.Draw();
+        room.Draw();
         //mirrors.Draw();
 
         fbo.unbind();

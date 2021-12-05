@@ -26,6 +26,11 @@ layout(binding=2) buffer vertextexcoords
   float texcoords[];
 };
 
+layout(binding=3) buffer lightsources
+{
+  float sb_light[];
+};
+
 vec2 InterpolateTexcoords(vec2 vt1, vec2 vt2, vec2 vt3, vec3 barycentric)
 {
     return vt1*barycentric.x + vt2*barycentric.y + vt3*barycentric.z;
@@ -50,7 +55,7 @@ struct rayinfo
 float GetDiffuse(vec3 Normal, vec3 LightPos, vec3 Coord)
 {
     vec3 LightVector = normalize(LightPos - Coord);
-    float distbr = 1/sqrt(distance(Coord, LightPos)/10000);
+    float distbr = 1/sqrt(distance(Coord, LightPos)/10);
     float Diffuse = max(dot(Normal, LightVector)*distbr, 0.1);
 
     float specularlight = 0.5;
@@ -139,17 +144,21 @@ rayinfo raytrace(vec3 StartPosition, vec3 RayDirection)
         vec2 vt1 = vec2(texcoords[ti], texcoords[ti+1]);
         vec2 vt2 = vec2(texcoords[ti+2], texcoords[ti+3]);
         vec2 vt3 = vec2(texcoords[ti+4], texcoords[ti+5]);
-
-        v1 *= 1000;
-        v2 *= 1000;
-        v3 *= 1000;
     
         ray = Intersection(v1, v2, v3, StartPosition, RayDirection);
 
         if(ray.hit && ray.origindist < dist)
         {
             dist = ray.origindist;
-            float br = GetDiffuse(ray.normal, LightPosition, ray.position);
+
+            float br;
+
+            for (int i = 0; i < sb_light.length(); i+=3)
+            {
+                 vec3 thislightpos = vec3(sb_light[i], sb_light[i+1], sb_light[i+2]);
+                 br += GetDiffuse(ray.normal, thislightpos, ray.position);
+            }
+
             vec2 tc = InterpolateTexcoords(vt1,vt2,vt3,ray.barycentric);
             vec4 texColor = texture(iTexture, tc);
             color = vec3(br,br,br)*texColor.xyz;
@@ -171,14 +180,12 @@ void main()
 {
     vec3 camvector = normalize(uv-CameraPosition);
     vec3 lightvector = normalize(uv-LightPosition);
-    vec3 offset = vec3(random(uv.xy),random(uv.xz),random(uv.yz))-0.5;
-    offset /= 100;
 
     rayinfo ray;
     ray.reflection = reflect(camvector, VertexNormal);
     for (int i = 0; i < 1; i ++)
     {
-       ray = raytrace(uv, ray.reflection + offset);
+       ray = raytrace(uv, ray.reflection);
     }
 
     vec4 texColor = texture(iTexture, TextureCoordinate);

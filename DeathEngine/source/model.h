@@ -18,6 +18,7 @@ public:
 
 	shader object_shader;
 	texture model_texture;
+	texture model_specmap;
 	vertexarray vao;
 
 	vec3<float> rotation = { 0.0, 0.0, 0.0 };
@@ -35,6 +36,8 @@ public:
 	void SetUniforms();
 
 	void BindTexture(texture texture_choice);
+
+	void BindSpecmap(texture specmap_choice);
 
 	void Load();
 

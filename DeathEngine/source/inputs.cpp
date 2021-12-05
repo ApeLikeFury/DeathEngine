@@ -6,10 +6,10 @@
 #include <iostream>
 
 vec3<float> CameraRotation;
-vec3<float> CameraPosition = { 0, 200, -150 };
+vec3<float> CameraPosition = { 0, 0, 0 };
 vec3<float> PlayerPosition;
 vec3<float> PlayerRotation;
-float speed = 1.0;
+float speed = 1;
 float MouseSensitivity = 0.1;
 
 bool PlayerControls(window win, float &LastTime)
@@ -20,37 +20,37 @@ bool PlayerControls(window win, float &LastTime)
 
     if (glfwGetKey(win.window_id, GLFW_KEY_W) == GLFW_PRESS)
     {
-        CameraPosition.z += cos(CameraRotation.y * radians) * Time_Passed * 200;
-        CameraPosition.x += sin(CameraRotation.y * radians) * Time_Passed * 200;
+        CameraPosition.z += cos(CameraRotation.y * radians) * Time_Passed * speed;
+        CameraPosition.x += sin(CameraRotation.y * radians) * Time_Passed * speed;
         PlayerRotation.y = CameraRotation.y;
     }
     else if (glfwGetKey(win.window_id, GLFW_KEY_S) == GLFW_PRESS)
     {
-        CameraPosition.z -= cos(CameraRotation.y * radians) * Time_Passed * 200;
-        CameraPosition.x -= sin(CameraRotation.y * radians) * Time_Passed * 200;
+        CameraPosition.z -= cos(CameraRotation.y * radians) * Time_Passed * speed;
+        CameraPosition.x -= sin(CameraRotation.y * radians) * Time_Passed * speed;
         PlayerRotation.y = CameraRotation.y;
     }
 
     if (glfwGetKey(win.window_id, GLFW_KEY_D) == GLFW_PRESS)
     {
-        CameraPosition.z += cos((CameraRotation.y + 90) * radians) * Time_Passed * 200;
-        CameraPosition.x += sin((CameraRotation.y + 90) * radians) * Time_Passed * 200;
+        CameraPosition.z += cos((CameraRotation.y + 90) * radians) * Time_Passed * speed;
+        CameraPosition.x += sin((CameraRotation.y + 90) * radians) * Time_Passed * speed;
         PlayerRotation.y = CameraRotation.y;
     }
     else if (glfwGetKey(win.window_id, GLFW_KEY_A) == GLFW_PRESS)
     {
-        CameraPosition.z -= cos((CameraRotation.y + 90) * radians) * Time_Passed * 200;
-        CameraPosition.x -= sin((CameraRotation.y + 90) * radians) * Time_Passed * 200;
+        CameraPosition.z -= cos((CameraRotation.y + 90) * radians) * Time_Passed * speed;
+        CameraPosition.x -= sin((CameraRotation.y + 90) * radians) * Time_Passed * speed;
         PlayerRotation.y = CameraRotation.y;
     }
 
     if (glfwGetKey(win.window_id, GLFW_KEY_E) == GLFW_PRESS)
     {
-        CameraPosition.y += Time_Passed*200;
+        CameraPosition.y += Time_Passed * speed;
     }
     else if (glfwGetKey(win.window_id, GLFW_KEY_Q) == GLFW_PRESS)
     {
-        CameraPosition.y -= Time_Passed * 200;
+        CameraPosition.y -= Time_Passed * speed;
     }
 
     if (glfwGetKey(win.window_id, GLFW_KEY_ESCAPE) == GLFW_PRESS)
