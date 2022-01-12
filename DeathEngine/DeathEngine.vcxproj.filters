@@ -166,5 +166,7 @@
     <None Include="shaders\Standard.vert" />
     <None Include="shaders\framebuffer.frag" />
     <None Include="shaders\framebuffer.vert" />
+    <None Include="shaders\AO.vert" />
+    <None Include="shaders\AO.frag" />
   </ItemGroup>
 </Project>

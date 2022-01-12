@@ -10,7 +10,7 @@ vertexbuffer::vertexbuffer(std::vector<float> vertices, unsigned int elements_pe
 	Error(glBufferData(GL_ARRAY_BUFFER, size(vertices)*sizeof(float), vertices.data(), GL_STATIC_DRAW));
 	Error(glEnableVertexAttribArray(location));
 	Error(glVertexAttribPointer(location, elements_per_vertex, GL_FLOAT, GL_FALSE, sizeof(float) * elements_per_vertex, 0));
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	Error(glBindBuffer(GL_ARRAY_BUFFER, 0));
 }
 
 vertexbuffer::~vertexbuffer()

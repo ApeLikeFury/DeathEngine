@@ -25,7 +25,6 @@ void entity::SetUniforms()
 
 // public members
 
-
 void entity::ImportObj(std::string filepath)
 {
 	std::stringstream ss;
@@ -138,6 +137,9 @@ void entity::ImportObj(std::string filepath)
 			{
 				vec3<float> n;
 				ss >> n.x >> n.y >> n.z;
+				n.x *= 100;
+				n.y *= 100;
+				n.z *= 100;
 				temp_vertex_positions.push_back(n);
 			}
 			else if (prefix == "f")

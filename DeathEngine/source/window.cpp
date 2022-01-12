@@ -4,7 +4,7 @@
 window::window(const unsigned int width, const unsigned int height)
 	:window_width(width), window_height(height)
 {
-	window_id = glfwCreateWindow(width, height, "Death Engine", NULL, NULL);
+	window_id = glfwCreateWindow(width, height, "OpenGL", NULL, NULL);
 	glfwMakeContextCurrent(window_id);
 }
 

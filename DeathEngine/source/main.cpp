@@ -21,6 +21,8 @@ extern vec3<float> CameraPosition;
 extern vec3<float> PlayerPosition;
 extern vec3<float> PlayerRotation;
 
+extern float f;
+
 int main(void)
 {
     InitialiseGLFW(4.3);
@@ -39,29 +41,34 @@ int main(void)
     texture wallpaper("textures/wallpaper.jpg");
     texture flooring("textures/Wood 02 Color 02.png");
 
+    texture asian("textures/asian.png");
+
     entity room;
     room.ImportObj("models/interior.obj");
     room.BindAllShaders(standard);
     room.BindAllTextures("textures/Wood 02 Color 01.png");
-
-    room.models[2].BindTexture(wallpaper);
-    room.models[0].BindTexture(flooring);
-
-    room.models[3].BindShader(reflections);
-    room.models[3].BindTexture(wallpaper);
-
     room.LoadModels();
 
-    entity test;
-    test.ImportObj("models/environment.obj");
-    test.location.x = 1000;
+
+    room.models[2].BindTexture(wallpaper);
+    room.models[3].BindShader(reflections);
+
+    entity human;
+    human.ImportObj("models/asian.obj");
+    human.BindAllShaders(standard);
+    human.BindAllTextures("textures/asian.png");
+    human.LoadModels();
 
     storagebuffer vertexpositions(room.vertex_positions, 0);
     storagebuffer vertexnormals(room.vertex_normals, 1);
     storagebuffer vertextexcoords(room.vertex_texcoords, 2);
 
 
-    std::vector<float> lightpositions = { 0, 0.5, 0 };
+    std::vector<float> lightpositions = { 
+        0, 2000, 0, 
+        50, 200, 5,
+        10000, 20000, 0
+    };
 
     storagebuffer lightsources(lightpositions, 3);
 
@@ -79,6 +86,8 @@ int main(void)
         standard.Uniform3f("iCameraRotation", CameraRotation.x, CameraRotation.y, CameraRotation.z);
         standard.Uniform2f("iScreenResolution", win.window_width, win.window_height);
 
+        standard.Uniform1f("iBrightDist", 1000);
+
         reflections.use();
         reflections.Uniform3f("iCameraPosition", CameraPosition.x, CameraPosition.y, CameraPosition.z);
         reflections.Uniform1f("iTime", glfwGetTime());
@@ -88,13 +97,13 @@ int main(void)
         fbo.bind();
 
         room.Draw();
-        //mirrors.Draw();
+        human.Draw();
 
         fbo.unbind();
 
         fbo.Draw();
 
-        //RenderUI();
+        RenderUI();
     }
 
     win.terminate();
